@@ -3,12 +3,21 @@ import { View, Image, Text } from "react-native";
 import { BackgroundColor } from "../components/backgroundcolor/backgroundcolor";
 import { Viewport } from "../styles/style";
 import { Button } from "../components/buttons/button";
+import { useNavigation } from "@react-navigation/native";
+import { NavigationProp } from "../interfaces/interface";
 
 export default function Home() {
   const [jeepData, setJeepData] = useState([
-    { id: 1, name: "Jeep 1", seats_capacity: "10/25" },
-    { id: 2, name: "Jeep 2", seats_capacity: "15/25" },
+    { id: 1, name: "Jeep 1", seats_capacity: "10/25", arrival_time: "15mins" },
+    { id: 2, name: "Jeep 2", seats_capacity: "15/25", arrival_time: "30mins" },
   ]);
+
+  const navigation = useNavigation<NavigationProp>();
+
+  const onTrack = (jeep: any) => {
+    navigation.navigate("Location", { jeep });
+  };
+
   return (
     <BackgroundColor
       style={{
@@ -89,6 +98,7 @@ export default function Home() {
                   borderRadius: 10,
                 }}
                 text="Track"
+                onPress={() => onTrack(jeep)}
               />
             </View>
           ))}
