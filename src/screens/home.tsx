@@ -1,18 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Image, Text } from "react-native";
 import { BackgroundColor } from "../components/backgroundcolor/backgroundcolor";
 import { Viewport } from "../styles/style";
 import { Button } from "../components/buttons/button";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationProp } from "../interfaces/interface";
+import { database } from "../../firebaseConfig";
+import { ref, onValue } from "firebase/database";
 
 export default function Home() {
   const [jeepData, setJeepData] = useState([
     { id: 1, name: "Jeep 1", seats_capacity: "10/25", arrival_time: "15mins" },
-    { id: 2, name: "Jeep 2", seats_capacity: "15/25", arrival_time: "30mins" },
   ]);
 
+  const [numberOfPerson, setNumberOfPerson] = useState<number | string>("");
+
   const navigation = useNavigation<NavigationProp>();
+
+  useEffect(() => {
+    const dataRef = ref(database, "person/");
+    onValue(dataRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("Data: ", data);
+      if (data) {
+        const firstNumber = Object.values(data)[0];
+        console.log("firstNumber", firstNumber);
+
+        if (typeof firstNumber === "number") {
+          setNumberOfPerson(firstNumber);
+        } else {
+          console.error("Unexpected data type:", firstNumber);
+        }
+      }
+    });
+  }, []);
 
   const onTrack = (jeep: any) => {
     navigation.navigate("Location", { jeep });
@@ -54,6 +75,8 @@ export default function Home() {
             width: Viewport.width * 0.9,
             height: Viewport.height * 0.15,
             borderRadius: 30,
+            display: "flex",
+            justifyContent: "center",
           }}
         >
           {jeepData.map((jeep: any) => (
@@ -86,7 +109,7 @@ export default function Home() {
                 resizeMode="contain"
               />
               <Text style={{ color: "black", fontWeight: "bold" }}>
-                {jeep.seats_capacity}
+                {numberOfPerson}/25
               </Text>
               <Button
                 style={{
