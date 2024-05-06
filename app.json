@@ -4,27 +4,36 @@
     "slug": "itrack-frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/in-app-logo.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/in-app-logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#82bab9"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#82bab9"
+      },
+      "package": "com.kiking.itrack",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCw2Fhwe7nGUbGQATnjDfEYfoZFN6lXGeA"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "88d52e17-ebb3-419a-a6f1-5c43419fe52c"
+      }
     }
   }
 }

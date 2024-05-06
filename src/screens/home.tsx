@@ -27,7 +27,11 @@ export default function Home() {
         console.log("firstNumber", firstNumber);
 
         if (typeof firstNumber === "number") {
-          setNumberOfPerson(firstNumber);
+          if (firstNumber >= 25) {
+            setNumberOfPerson(25);
+          } else if (firstNumber < 25) {
+            setNumberOfPerson(firstNumber);
+          }
         } else {
           console.error("Unexpected data type:", firstNumber);
         }
@@ -35,8 +39,8 @@ export default function Home() {
     });
   }, []);
 
-  const onTrack = (jeep: any) => {
-    navigation.navigate("Location", { jeep });
+  const onTrack = (numberOfPerson: any) => {
+    navigation.navigate("Location", { numberOfPerson });
   };
 
   return (
@@ -109,7 +113,7 @@ export default function Home() {
                 resizeMode="contain"
               />
               <Text style={{ color: "black", fontWeight: "bold" }}>
-                {numberOfPerson}/25
+                {numberOfPerson == 25 ? <>Full</> : <>{numberOfPerson}/25</>}
               </Text>
               <Button
                 style={{
@@ -121,7 +125,7 @@ export default function Home() {
                   borderRadius: 10,
                 }}
                 text="Track"
-                onPress={() => onTrack(jeep)}
+                onPress={() => onTrack(numberOfPerson)}
               />
             </View>
           ))}
