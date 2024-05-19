@@ -1,17 +1,19 @@
 {
   "expo": {
-    "name": "itrack-frontend",
-    "slug": "itrack-frontend",
+    "name": "iTrack",
+    "slug": "iTrack",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/in-app-logo.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/in-app-logo.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#82bab9"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -32,7 +34,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "88d52e17-ebb3-419a-a6f1-5c43419fe52c"
+        "projectId": "5da691ba-f88a-419c-9ef3-1a2f0e27b65a"
       }
     }
   }

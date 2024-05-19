@@ -6,7 +6,7 @@ import { BackgroundColor } from "../components/backgroundcolor/backgroundcolor";
 import { Viewport } from "../styles/style";
 import { Button } from "../components/buttons/button";
 import { useNavigation } from "@react-navigation/native";
-import MapView, { UrlTile, Callout, Marker } from "react-native-maps";
+import MapView, { UrlTile, Marker } from "react-native-maps";
 import { database } from "../../firebaseConfig";
 import { ref, onValue } from "firebase/database";
 
@@ -187,7 +187,6 @@ export const Location: React.FC<LocationProps> = ({ route }) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        loadingBackgroundColor="Blue"
       >
         <UrlTile
           urlTemplate="https://openstreetmap.keannu1.duckdns.org/tile/{z}/{x}/{y}.png?"
