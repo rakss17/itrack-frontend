@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Image, Text } from "react-native";
+import { View, Image, Text, BackHandler, Alert } from "react-native";
 import { BackgroundColor } from "../components/backgroundcolor/backgroundcolor";
 import { Viewport } from "../styles/style";
 import { Button } from "../components/buttons/button";
@@ -7,15 +7,46 @@ import { useNavigation } from "@react-navigation/native";
 import { NavigationProp } from "../interfaces/interface";
 import { database } from "../../firebaseConfig";
 import { ref, onValue } from "firebase/database";
+import NetInfo from "@react-native-community/netinfo";
 
 export default function Home() {
   const [jeepData, setJeepData] = useState([
     { id: 1, name: "Jeep 1", seats_capacity: "10/25", arrival_time: "15mins" },
   ]);
-
+  const [internetStatus, setInternetStatus] = useState("Checking...");
   const [numberOfPerson, setNumberOfPerson] = useState<number | string>("");
 
   const navigation = useNavigation<NavigationProp>();
+
+  useEffect(() => {
+    const checkInternetConnection = async () => {
+      try {
+        const state = await NetInfo.fetch();
+        setInternetStatus(state.isInternetReachable ? "Online" : "Offline");
+      } catch (error) {
+        console.error(error);
+        setInternetStatus("Error checking internet connection");
+      }
+    };
+
+    checkInternetConnection();
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setInternetStatus(state.isInternetReachable ? "Online" : "Offline");
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (internetStatus === "Offline") {
+      Alert.alert(
+        "No Internet Connection",
+        "Please check your network and try again.",
+        [{ text: "Close", onPress: () => BackHandler.exitApp() }],
+        { cancelable: false }
+      );
+    }
+  }, [internetStatus === "Offline"]);
 
   useEffect(() => {
     const dataRef = ref(database, "person/");
