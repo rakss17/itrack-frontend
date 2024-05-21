@@ -216,7 +216,7 @@ export const LocationForBusTwo: React.FC<LocationProps> = () => {
         toolbarEnabled={false}
         rotateEnabled={false}
         minZoomLevel={15}
-        initialRegion={{
+        region={{
           latitude: latitude === 0 || latitude === null ? 8.486851 : latitude,
           longitude:
             longitude === 0 || longitude === null ? 124.65519 : longitude,
