@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Image, Text, BackHandler, Alert } from "react-native";
 import { BackgroundColor } from "../components/backgroundcolor/backgroundcolor";
 import { Viewport } from "../styles/style";
 import { Button } from "../components/buttons/button";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NavigationProp } from "../interfaces/interface";
 import { database } from "../../firebaseConfig";
 import { ref, onValue } from "firebase/database";
@@ -20,35 +20,39 @@ export default function Home() {
 
   const navigation = useNavigation<NavigationProp>();
 
-  useEffect(() => {
-    const checkInternetConnection = async () => {
-      try {
-        const state = await NetInfo.fetch();
+  useFocusEffect(
+    React.useCallback(() => {
+      const checkInternetConnection = async () => {
+        try {
+          const state = await NetInfo.fetch();
+          setInternetStatus(state.isInternetReachable ? "Online" : "Offline");
+        } catch (error) {
+          console.error(error);
+          setInternetStatus("Error checking internet connection");
+        }
+      };
+
+      checkInternetConnection();
+      const unsubscribe = NetInfo.addEventListener((state) => {
         setInternetStatus(state.isInternetReachable ? "Online" : "Offline");
-      } catch (error) {
-        console.error(error);
-        setInternetStatus("Error checking internet connection");
+      });
+
+      return () => unsubscribe();
+    }, [])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (internetStatus === "Offline") {
+        Alert.alert(
+          "No Internet Connection",
+          "Please check your network and try again.",
+          [{ text: "Close", onPress: () => BackHandler.exitApp() }],
+          { cancelable: false }
+        );
       }
-    };
-
-    checkInternetConnection();
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      setInternetStatus(state.isInternetReachable ? "Online" : "Offline");
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (internetStatus === "Offline") {
-      Alert.alert(
-        "No Internet Connection",
-        "Please check your network and try again.",
-        [{ text: "Close", onPress: () => BackHandler.exitApp() }],
-        { cancelable: false }
-      );
-    }
-  }, [internetStatus === "Offline"]);
+    }, [internetStatus === "Offline"])
+  );
 
   useEffect(() => {
     const dataRef = ref(database, "bus1_count/");
