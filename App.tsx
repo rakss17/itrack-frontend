@@ -2,7 +2,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import "react-native-gesture-handler";
 import Home from "./src/screens/home";
-import { Location } from "./src/screens/location";
+import { LocationForBusOne } from "./src/screens/locationForBusOne";
+import { LocationForBusTwo } from "./src/screens/locationForBusTwo";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +15,8 @@ export default function App() {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Location" component={Location} />
+        <Stack.Screen name="LocationForBusOne" component={LocationForBusOne} />
+        <Stack.Screen name="LocationForBusTwo" component={LocationForBusTwo} />
       </Stack.Navigator>
     </NavigationContainer>
   );

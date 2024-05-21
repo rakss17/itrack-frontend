@@ -15,7 +15,8 @@ export interface ButtonProps {
 
 export type RootStackParamList = {
   Home: any;
-  Location: any;
+  LocationForBusOne: any;
+  LocationForBusTwo: any;
 };
 
 export type NavigationProp = StackNavigationProp<RootStackParamList>;

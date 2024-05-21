@@ -1,4 +1,4 @@
-import { Image, View, Text } from "react-native";
+import { Image, View, Text, BackHandler, Alert } from "react-native";
 import { useState, useEffect } from "react";
 import React from "react";
 import { LocationProps, NavigationProp } from "../interfaces/interface";
@@ -9,18 +9,50 @@ import { useNavigation } from "@react-navigation/native";
 import MapView, { UrlTile, Marker } from "react-native-maps";
 import { database } from "../../firebaseConfig";
 import { ref, onValue } from "firebase/database";
+import NetInfo from "@react-native-community/netinfo";
 
-export const Location: React.FC<LocationProps> = ({ route }) => {
+export const LocationForBusTwo: React.FC<LocationProps> = () => {
   const navigation = useNavigation<NavigationProp>();
-  const [numberOfPerson, setNumberOfPerson] = useState<number | string>("");
+  const [internetStatus, setInternetStatus] = useState("Checking...");
+  const [numberOfPerson, setNumberOfPerson] = useState<number | string>("0");
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
 
   useEffect(() => {
-    const dataRef = ref(database, "person/");
+    const checkInternetConnection = async () => {
+      try {
+        const state = await NetInfo.fetch();
+        setInternetStatus(state.isInternetReachable ? "Online" : "Offline");
+      } catch (error) {
+        console.error(error);
+        setInternetStatus("Error checking internet connection");
+      }
+    };
+
+    checkInternetConnection();
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setInternetStatus(state.isInternetReachable ? "Online" : "Offline");
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (internetStatus === "Offline") {
+      Alert.alert(
+        "No Internet Connection",
+        "Please check your network and try again.",
+        [{ text: "Close", onPress: () => BackHandler.exitApp() }],
+        { cancelable: false }
+      );
+    }
+  }, [internetStatus === "Offline"]);
+
+  useEffect(() => {
+    const dataRef = ref(database, "bus2_count/");
     onValue(dataRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("Data: ", data);
+      console.log("Count Bus Two: ", data);
       if (data) {
         const firstNumber = Object.values(data)[0];
         console.log("firstNumber", firstNumber);
@@ -39,10 +71,10 @@ export const Location: React.FC<LocationProps> = ({ route }) => {
   }, []);
 
   useEffect(() => {
-    const dataRef = ref(database, "LATITUDE/");
+    const dataRef = ref(database, "bus2_LATITUDE/");
     onValue(dataRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("Data: ", data);
+      console.log("Latitude Bus Two: ", data);
       if (data) {
         const latitudeFromDb = Object.values(data)[0];
         console.log("latitude", latitudeFromDb);
@@ -58,10 +90,10 @@ export const Location: React.FC<LocationProps> = ({ route }) => {
   }, []);
 
   useEffect(() => {
-    const dataRef = ref(database, "LONGITUDE/");
+    const dataRef = ref(database, "bus2_LONGITUDE/");
     onValue(dataRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("Data: ", data);
+      console.log("Longitude Bus Two: ", data);
       if (data) {
         const longitudeFromDb = Object.values(data)[0];
         console.log("longitudeFromDb", longitudeFromDb);
@@ -122,7 +154,7 @@ export const Location: React.FC<LocationProps> = ({ route }) => {
             source={require("../../assets/bus-icon.png")}
             resizeMode="contain"
           />
-          <Text>Jeep 1</Text>
+          <Text>BUS 2</Text>
         </View>
         <View
           style={{
@@ -182,8 +214,9 @@ export const Location: React.FC<LocationProps> = ({ route }) => {
         rotateEnabled={false}
         minZoomLevel={15}
         initialRegion={{
-          latitude: 8.486851,
-          longitude: 124.65519,
+          latitude: latitude === 0 || latitude === null ? 8.486851 : latitude,
+          longitude:
+            longitude === 0 || longitude === null ? 124.65519 : longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}

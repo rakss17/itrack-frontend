@@ -10,11 +10,13 @@ import { ref, onValue } from "firebase/database";
 import NetInfo from "@react-native-community/netinfo";
 
 export default function Home() {
-  const [jeepData, setJeepData] = useState([
-    { id: 1, name: "Jeep 1", seats_capacity: "10/25", arrival_time: "15mins" },
-  ]);
   const [internetStatus, setInternetStatus] = useState("Checking...");
-  const [numberOfPerson, setNumberOfPerson] = useState<number | string>("");
+  const [numberOfPersonForBusOne, setNumberOfPersonForBusOne] = useState<
+    number | string
+  >("0");
+  const [numberOfPersonForBusTwo, setNumberOfPersonForBusTwo] = useState<
+    number | string
+  >("0");
 
   const navigation = useNavigation<NavigationProp>();
 
@@ -49,19 +51,18 @@ export default function Home() {
   }, [internetStatus === "Offline"]);
 
   useEffect(() => {
-    const dataRef = ref(database, "person/");
+    const dataRef = ref(database, "bus1_count/");
     onValue(dataRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("Data: ", data);
+      console.log("Count Bus One: ", data);
       if (data) {
         const firstNumber = Object.values(data)[0];
-        console.log("firstNumber", firstNumber);
 
         if (typeof firstNumber === "number") {
           if (firstNumber >= 25) {
-            setNumberOfPerson(25);
+            setNumberOfPersonForBusOne(25);
           } else if (firstNumber < 25) {
-            setNumberOfPerson(firstNumber);
+            setNumberOfPersonForBusOne(firstNumber);
           }
         } else {
           console.error("Unexpected data type:", firstNumber);
@@ -70,9 +71,26 @@ export default function Home() {
     });
   }, []);
 
-  const onTrack = (numberOfPerson: any) => {
-    navigation.navigate("Location", { numberOfPerson });
-  };
+  useEffect(() => {
+    const dataRef = ref(database, "bus2_count/");
+    onValue(dataRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("Count Bus Two: ", data);
+      if (data) {
+        const firstNumber = Object.values(data)[0];
+
+        if (typeof firstNumber === "number") {
+          if (firstNumber >= 25) {
+            setNumberOfPersonForBusTwo(25);
+          } else if (firstNumber < 25) {
+            setNumberOfPersonForBusTwo(firstNumber);
+          }
+        } else {
+          console.error("Unexpected data type:", firstNumber);
+        }
+      }
+    });
+  }, []);
 
   return (
     <BackgroundColor
@@ -102,7 +120,7 @@ export default function Home() {
         }}
       >
         <Text style={{ color: "white", fontWeight: "bold" }}>
-          NUMBER OF SEATS AVAILABLE
+          NUMBER OF PASSENGERS
         </Text>
         <View
           style={{
@@ -114,52 +132,107 @@ export default function Home() {
             justifyContent: "center",
           }}
         >
-          {jeepData.map((jeep: any) => (
-            <View
-              key={jeep.id}
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}
+          >
+            <Image
               style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-around",
+                width: Viewport.width * 0.09,
+                height: Viewport.height * 0.07,
               }}
-            >
-              <Image
-                style={{
-                  width: Viewport.width * 0.09,
-                  height: Viewport.height * 0.07,
-                }}
-                source={require("../../assets/bus-icon.png")}
-                resizeMode="contain"
-              />
-              <Text style={{ color: "black", fontWeight: "bold" }}>
-                {jeep.name}
-              </Text>
-              <Image
-                style={{
-                  width: Viewport.width * 0.09,
-                  height: Viewport.height * 0.07,
-                }}
-                source={require("../../assets/seat-icon.png")}
-                resizeMode="contain"
-              />
-              <Text style={{ color: "black", fontWeight: "bold" }}>
-                {numberOfPerson == 25 ? <>Full</> : <>{numberOfPerson}/25</>}
-              </Text>
-              <Button
-                style={{
-                  width: Viewport.width * 0.15,
-                  height: Viewport.height * 0.05,
-                  backgroundColor: "white",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 10,
-                }}
-                text="Track"
-                onPress={() => onTrack(numberOfPerson)}
-              />
-            </View>
-          ))}
+              source={require("../../assets/bus-icon.png")}
+              resizeMode="contain"
+            />
+            <Text style={{ color: "black", fontWeight: "bold" }}>BUS 1</Text>
+            <Image
+              style={{
+                width: Viewport.width * 0.09,
+                height: Viewport.height * 0.07,
+              }}
+              source={require("../../assets/seat-icon.png")}
+              resizeMode="contain"
+            />
+            <Text style={{ color: "black", fontWeight: "bold" }}>
+              {numberOfPersonForBusOne == 25 ? (
+                <>Full</>
+              ) : (
+                <>{numberOfPersonForBusOne}/25</>
+              )}
+            </Text>
+            <Button
+              style={{
+                width: Viewport.width * 0.15,
+                height: Viewport.height * 0.05,
+                backgroundColor: "white",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 10,
+              }}
+              text="Track"
+              onPress={() => navigation.navigate("LocationForBusOne")}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            backgroundColor: "#D9D9D9",
+            width: Viewport.width * 0.9,
+            height: Viewport.height * 0.15,
+            borderRadius: 30,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}
+          >
+            <Image
+              style={{
+                width: Viewport.width * 0.09,
+                height: Viewport.height * 0.07,
+              }}
+              source={require("../../assets/bus-icon.png")}
+              resizeMode="contain"
+            />
+            <Text style={{ color: "black", fontWeight: "bold" }}>BUS 2</Text>
+            <Image
+              style={{
+                width: Viewport.width * 0.09,
+                height: Viewport.height * 0.07,
+              }}
+              source={require("../../assets/seat-icon.png")}
+              resizeMode="contain"
+            />
+            <Text style={{ color: "black", fontWeight: "bold" }}>
+              {numberOfPersonForBusTwo == 25 ? (
+                <>Full</>
+              ) : (
+                <>{numberOfPersonForBusTwo}/25</>
+              )}
+            </Text>
+            <Button
+              style={{
+                width: Viewport.width * 0.15,
+                height: Viewport.height * 0.05,
+                backgroundColor: "white",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 10,
+              }}
+              text="Track"
+              onPress={() => navigation.navigate("LocationForBusTwo")}
+            />
+          </View>
         </View>
       </View>
     </BackgroundColor>
