@@ -14,9 +14,11 @@ export default function Home() {
   const [numberOfPersonForBusOne, setNumberOfPersonForBusOne] = useState<
     number | string
   >("0");
-  const [numberOfPersonForBusTwo, setNumberOfPersonForBusTwo] = useState<
-    number | string
-  >("0");
+
+  // -------------------------------- BUS 2 removed for the mean time ------------------------------------
+  // const [numberOfPersonForBusTwo, setNumberOfPersonForBusTwo] = useState<
+  //   number | string
+  // >("0");
 
   const navigation = useNavigation<NavigationProp>();
 
@@ -55,7 +57,8 @@ export default function Home() {
   );
 
   useEffect(() => {
-    const dataRef = ref(database, "bus1_count/");
+    // --------------------------- CHANGED PATH FROM 1 TO 2 FOR THE MEAN TIME ----------------------------------- >
+    const dataRef = ref(database, "bus2_count/");
     onValue(dataRef, (snapshot) => {
       const data = snapshot.val();
       console.log("Count Bus One: ", data);
@@ -75,26 +78,27 @@ export default function Home() {
     });
   }, []);
 
-  useEffect(() => {
-    const dataRef = ref(database, "bus2_count/");
-    onValue(dataRef, (snapshot) => {
-      const data = snapshot.val();
-      console.log("Count Bus Two: ", data);
-      if (data) {
-        const firstNumber = Object.values(data)[0];
+  // -------------------------------- BUS 2 removed for the mean time ------------------------------------
+  // useEffect(() => {
+  //   const dataRef = ref(database, "bus2_count/");
+  //   onValue(dataRef, (snapshot) => {
+  //     const data = snapshot.val();
+  //     console.log("Count Bus Two: ", data);
+  //     if (data) {
+  //       const firstNumber = Object.values(data)[0];
 
-        if (typeof firstNumber === "number") {
-          if (firstNumber >= 25) {
-            setNumberOfPersonForBusTwo(25);
-          } else if (firstNumber < 25) {
-            setNumberOfPersonForBusTwo(firstNumber);
-          }
-        } else {
-          console.error("Unexpected data type:", firstNumber);
-        }
-      }
-    });
-  }, []);
+  //       if (typeof firstNumber === "number") {
+  //         if (firstNumber >= 25) {
+  //           setNumberOfPersonForBusTwo(25);
+  //         } else if (firstNumber < 25) {
+  //           setNumberOfPersonForBusTwo(firstNumber);
+  //         }
+  //       } else {
+  //         console.error("Unexpected data type:", firstNumber);
+  //       }
+  //     }
+  //   });
+  // }, []);
 
   return (
     <BackgroundColor
@@ -152,7 +156,7 @@ export default function Home() {
               source={require("../../assets/bus-icon.png")}
               resizeMode="contain"
             />
-            <Text style={{ color: "black", fontWeight: "bold" }}>BUS 1</Text>
+            <Text style={{ color: "black", fontWeight: "bold" }}>BUS</Text>
             <Image
               style={{
                 width: Viewport.width * 0.09,
@@ -182,7 +186,9 @@ export default function Home() {
             />
           </View>
         </View>
-        <View
+
+        {/* -------------------------------- BUS 2 removed for the mean time ------------------------------------ */}
+        {/* <View
           style={{
             backgroundColor: "#D9D9D9",
             width: Viewport.width * 0.9,
@@ -237,7 +243,7 @@ export default function Home() {
               onPress={() => navigation.navigate("LocationForBusTwo")}
             />
           </View>
-        </View>
+        </View> */}
       </View>
     </BackgroundColor>
   );

@@ -52,7 +52,8 @@ export const LocationForBusOne: React.FC<LocationProps> = () => {
   );
 
   useEffect(() => {
-    const dataRef = ref(database, "bus1_count/");
+    // --------------------------- CHANGED PATH FROM 1 TO 2 FOR THE MEAN TIME ----------------------------------- >
+    const dataRef = ref(database, "bus2_count/");
     onValue(dataRef, (snapshot) => {
       const data = snapshot.val();
       console.log("Count Bus One: ", data);
@@ -74,7 +75,8 @@ export const LocationForBusOne: React.FC<LocationProps> = () => {
   }, []);
 
   useEffect(() => {
-    const dataRef = ref(database, "bus1_LATITUDE/");
+    // --------------------------- CHANGED PATH FROM 1 TO 2 FOR THE MEAN TIME ----------------------------------- >
+    const dataRef = ref(database, "bus2_LATITUDE/");
     onValue(dataRef, (snapshot) => {
       const data = snapshot.val();
       console.log("Latitude Bus One: ", data);
@@ -93,7 +95,8 @@ export const LocationForBusOne: React.FC<LocationProps> = () => {
   }, []);
 
   useEffect(() => {
-    const dataRef = ref(database, "bus1_LONGITUDE/");
+    // --------------------------- CHANGED PATH FROM 1 TO 2 FOR THE MEAN TIME ----------------------------------- >
+    const dataRef = ref(database, "bus2_LONGITUDE/");
     onValue(dataRef, (snapshot) => {
       const data = snapshot.val();
       console.log("Longitude Bus One: ", data);
@@ -157,7 +160,7 @@ export const LocationForBusOne: React.FC<LocationProps> = () => {
             source={require("../../assets/bus-icon.png")}
             resizeMode="contain"
           />
-          <Text>BUS 1</Text>
+          <Text>BUS</Text>
         </View>
         <View
           style={{
