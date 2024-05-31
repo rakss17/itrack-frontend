@@ -228,7 +228,7 @@ export const LocationForBusOne: React.FC<LocationProps> = () => {
         }}
       >
         <UrlTile
-          urlTemplate="https://openstreetmap.keannu1.duckdns.org/tile/{z}/{x}/{y}.png?"
+          urlTemplate="https://tile.openstreetmap.de/{z}/{x}/{y}.png"
           shouldReplaceMapContent={true}
           maximumZ={19}
           flipY={false}
